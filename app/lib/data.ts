@@ -1,6 +1,8 @@
 import mssql from 'mssql';
 import { unstable_noStore as noStore } from 'next/cache';
 
+const DB_PREFIX = process.env.NODE_ENV === 'production' ? '[10.10.10.11].UNIQUE_DB.dbo.' : '';
+
 const sqlConfig = {
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -30,10 +32,10 @@ export async function getRezCounts(): Promise<RezCounts> {
   noStore();
   try {
     await mssql.connect(sqlConfig);
-    const result = await mssql.query`
+    const result = await mssql.query(`
       select SUM(IIF(RezDurum = 0, 1, 0)) Waiting, SUM(IIF(RezDurum = 1, 1, 0)) Processing,
              SUM(IIF(RezDurum = 2, 1, 0)) Canceled, SUM(IIF(RezDurum = 3, 1, 0)) Transferred
-        from [10.10.10.11].UNIQUE_DB.dbo.Web_Rezervasyon;`;
+        from ${DB_PREFIX}Web_Rezervasyon;`);
     console.log('Database Result:', result.recordset[0]);
     return result.recordset[0];
   } catch (error) {
