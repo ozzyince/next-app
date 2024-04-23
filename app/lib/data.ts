@@ -2,8 +2,6 @@ import sql from 'mssql';
 import { unstable_noStore as noStore } from 'next/cache';
 import { RezCounts, Reservation } from '@/app/lib/definitions';
 
-const DB_PREFIX = process.env.NODE_ENV === 'production' ? '[10.10.10.11].UNIQUE_DB.dbo.' : '';
-
 const sqlConfig = {
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -29,7 +27,7 @@ export async function getRezCounts() {
     const result = await sql.query<RezCounts>(`
       select SUM(IIF(RezDurum = 0, 1, 0)) Waiting, SUM(IIF(RezDurum = 1, 1, 0)) Processing,
              SUM(IIF(RezDurum = 2, 1, 0)) Canceled, SUM(IIF(RezDurum = 3, 1, 0)) Transferred
-        from ${DB_PREFIX}Web_Rezervasyon;`);
+        from ${process.env.DB_PREFIX}Web_Rezervasyon;`);
     console.log('Database Result:', result.recordset[0]);
     return result.recordset[0];
   } catch (error) {
@@ -51,7 +49,7 @@ export async function fetchFilteredReservations(query: string, currentPage: numb
     request.input('itemsPerPage', sql.Int, ITEMS_PER_PAGE);
     const result = await request.query<Reservation[]>(`
       select RezId, Hacim, KayitTarih, SonStatu, KayitKullanici, GuncellemeKullanici, DurumNot
-        from ${DB_PREFIX}lgs.vw_SeaReservation
+        from ${process.env.DB_PREFIX}lgs.vw_SeaReservation
        where RezDurum = 0 and (KayitKullanici like @query)
        order by KayitTarih desc
        offset @offset rows fetch next @itemsPerPage rows only;`);
