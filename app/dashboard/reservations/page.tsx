@@ -3,6 +3,7 @@ import Search from '@/app/ui/search';
 import Table from '@/app/ui/reservations/table';
 import { CreateReservation } from '@/app/ui/reservations/buttons';
 import { ReservationsTableSkeleton } from '@/app/ui/skeletons';
+import { fetchFilteredReservations } from '@/app/lib/data';
 
 export default async function Page({
   searchParams,
@@ -14,6 +15,7 @@ export default async function Page({
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
+  const reservations = await fetchFilteredReservations(query, currentPage);
 
   return (
     <div className="w-full">
@@ -25,7 +27,7 @@ export default async function Page({
         <CreateReservation />
       </div>
       <Suspense key={query + currentPage} fallback={<ReservationsTableSkeleton />}>
-        <Table query={query} currentPage={currentPage} />
+        <Table reservations={reservations} />
       </Suspense>
       <div className="mt-5 flex w-full justify-center" />
     </div>

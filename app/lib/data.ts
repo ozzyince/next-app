@@ -27,7 +27,7 @@ export async function getRezCounts() {
     const result = await sql.query<RezCounts>(`
       select SUM(IIF(RezDurum = 0, 1, 0)) Waiting, SUM(IIF(RezDurum = 1, 1, 0)) Processing,
              SUM(IIF(RezDurum = 2, 1, 0)) Canceled, SUM(IIF(RezDurum = 3, 1, 0)) Transferred
-        from ${process.env.DB_PREFIX}Web_Rezervasyon;`);
+        from ${process.env.DB_PREFIX}dbo.Web_Rezervasyon;`);
     console.log('Database Result:', result.recordset[0]);
     return result.recordset[0];
   } catch (error) {

@@ -1,93 +1,41 @@
-import Image from 'next/image';
-import { UpdateReservation, DeleteReservation } from '@/app/ui/reservations/buttons';
+'use client';
+
 import ReservationStatus from '@/app/ui/reservations/status';
-import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { fetchFilteredReservations } from '@/app/lib/data';
+import { Button, DataGrid } from 'devextreme-react';
+import { Column, ColumnChooser, Export, FilterRow, Pager, Paging, RemoteOperations, Summary, TotalItem } from 'devextreme-react/cjs/data-grid';
+import { Reservation } from '@/app/lib/definitions';
 
-export default async function ReservationsTable({ query, currentPage }: { query: string; currentPage: number }) {
-  const reservations = await fetchFilteredReservations(query, currentPage);
-
+export default function ReservationsTable({ reservations }: { reservations: Reservation[] }) {
   return (
-    <div className="mt-6 flow-root">
-      <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
-          <div className="md:hidden">
-            {reservations?.map((reservation) => (
-              <div key={reservation.RezId} className="mb-2 w-full rounded-md bg-white p-4">
-                <div className="flex items-center justify-between border-b pb-4">
-                  <div>
-                    <div className="mb-2 flex items-center">
-                      <p>{reservation.KayitKullanici}</p>
-                    </div>
-                    <p className="text-sm text-gray-500">{reservation.KayitKullanici}</p>
-                  </div>
-                  <ReservationStatus status={reservation.SonStatu} />
-                </div>
-                <div className="flex w-full items-center justify-between pt-4">
-                  <div>
-                    <p className="text-xl font-medium">{formatCurrency(reservation.Hacim)}</p>
-                    <p>{formatDateToLocal(reservation.KayitTarih.toString())}</p>
-                  </div>
-                  <div className="flex justify-end gap-2">
-                    <UpdateReservation id={reservation.RezId.toString()} />
-                    <DeleteReservation id={reservation.RezId.toString()} />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <table className="hidden min-w-full text-gray-900 md:table">
-            <thead className="rounded-lg text-left text-sm font-normal">
-              <tr>
-                <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Customer
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Email
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Amount
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Date
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Status
-                </th>
-                <th scope="col" className="relative py-3 pl-6 pr-3">
-                  <span className="sr-only">Edit</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white">
-              {reservations?.map((reservation) => (
-                <tr
-                  key={reservation.RezId}
-                  className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
-                >
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <div className="flex items-center gap-3">
-                      <p>{reservation.KayitKullanici}</p>
-                    </div>
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">{reservation.DurumNot}</td>
-                  <td className="whitespace-nowrap px-3 py-3">{formatCurrency(reservation.Hacim)}</td>
-                  <td className="whitespace-nowrap px-3 py-3">{formatDateToLocal(reservation.KayitTarih.toString())}</td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    <ReservationStatus status={reservation.SonStatu} />
-                  </td>
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <div className="flex justify-end gap-3">
-                      <UpdateReservation id={reservation.RezId.toString()} />
-                      <DeleteReservation id={reservation.RezId.toString()} />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+    <DataGrid
+      className="dx-card wide-card"
+      dataSource={reservations}
+      showColumnLines
+      showRowLines
+      showBorders
+      rowAlternationEnabled
+      allowColumnResizing
+      allowColumnReordering
+      columnResizingMode="widget"
+      focusedRowEnabled
+      autoNavigateToFocusedRow={false}
+      filterSyncEnabled
+    >
+      <Export enabled />
+      <Paging defaultPageSize={50} />
+      <Pager showPageSizeSelector displayMode="compact" />
+      <FilterRow visible />
+      <RemoteOperations paging filtering sorting summary />
+      <ColumnChooser enabled />
+      <Column type="buttons" width={50} caption="Action" fixed fixedPosition="right" allowResizing={false}></Column>
+      <Column dataField="RezId" dataType="number" caption="Res.ID" width={70} fixed allowResizing={false} />
+      <Column dataField="Hacim" dataType="number" caption="Volume" width={70} />
+      <Column dataField="KayitTarih" dataType="date" caption="Created" width={100} format="shortDate" />
+      <Column dataField="SonStatu" caption="Status" width={100} cellRender={ReservationStatus} />
+      <Column dataField="KayitKullanici" caption="Created By" width={100} />
+      <Summary>
+        <TotalItem column="RezId" summaryType="count" displayFormat="{0}" valueFormat="#,##0" />
+      </Summary>
+    </DataGrid>
   );
 }
