@@ -48,8 +48,8 @@ export async function fetchFilteredReservations(query: string, currentPage: numb
     request.input('offset', sql.Int, offset);
     request.input('itemsPerPage', sql.Int, ITEMS_PER_PAGE);
     const result = await request.query<Reservation[]>(`
-      select RezId, Hacim, KayitTarih, SonStatu, KayitKullanici, GuncellemeKullanici, DurumNot
-        from ${process.env.DB_PREFIX}lgs.vw_SeaReservation
+      select *
+        from ${process.env.DB_PREFIX}dbo._OZGUR_vw_SeaReservation
        where RezDurum = 0 and (KayitKullanici like @query)
        order by KayitTarih desc
        offset @offset rows fetch next @itemsPerPage rows only;`);

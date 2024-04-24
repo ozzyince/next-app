@@ -16,7 +16,7 @@ export default async function Page({
   const currentPage = Number(searchParams?.page) || 1;
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full">
       <div className="flex w-full items-center justify-between">
         <h1 className="text-2xl">Reservations</h1>
       </div>
