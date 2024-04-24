@@ -8,7 +8,7 @@ import { Reservation } from '@/app/lib/definitions';
 export default function ReservationsTable({ reservations }: { reservations: Reservation[] }) {
   return (
     <DataGrid
-      className="dx-card wide-card"
+      className="dx-card wide-card w-full"
       dataSource={reservations}
       showColumnLines
       showRowLines
