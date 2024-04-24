@@ -6,6 +6,7 @@ export type RezCounts = {
 };
 
 export type Reservation = {
+  [key: string]: any;
   RezId: number;
   YukHazirTarihi: Date;
   MuhtemelCikisTarihi: Date;
