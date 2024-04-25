@@ -12,7 +12,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export default function ReservationsTable({ reservations }: { reservations: Reservation[] }) {
   const searchParams = useSearchParams();
-  const [sortField, sortDirection] = searchParams.get('sort')?.split(' ') as [string, 'asc' | 'desc' | undefined];
+  const [sortField, sortDirection] = (searchParams.get('sort')?.split(' ') as [string, 'asc' | 'desc' | undefined]) ?? ['', undefined];
   const pathname = usePathname();
   const { replace } = useRouter();
 
