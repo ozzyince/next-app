@@ -11,7 +11,6 @@ export default function ReservationsTable({ reservations }: { reservations: Rese
 
   return (
     <DataGrid
-      className="dx-card wide-card w-full h-full"
       keyExpr={'RezId'}
       dataSource={reservations}
       showColumnLines
