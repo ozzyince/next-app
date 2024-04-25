@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import Search from '@/app/ui/search';
 import { CreateReservation } from '@/app/ui/reservations/buttons';
-import { ReservationsTableSkeleton } from '@/app/ui/skeletons';
+import ReservationsTableSkeleton from '@/app/ui/reservations/skeleton';
 import TableWrapper from './table-wrapper';
 
 export default async function Page({
