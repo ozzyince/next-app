@@ -1,14 +1,18 @@
 'use client';
 
-import { Button, DataGrid } from 'devextreme-react';
-import { Column, ColumnChooser, Export, FilterRow, Pager, Paging, RemoteOperations, Summary, TotalItem } from 'devextreme-react/data-grid';
+import { useCallback } from 'react';
+import { DataGrid } from 'devextreme-react';
+import { Column } from 'devextreme-react/data-grid';
 import { Reservation } from '@/app/lib/definitions';
 import { cellPrepared } from './utils';
 
 export default function ReservationsTable({ reservations }: { reservations: Reservation[] }) {
+  const optionChanged = useCallback((e: any) => console.log('Option Changed:', e), []);
+
   return (
     <DataGrid
       className="dx-card wide-card w-full h-full"
+      keyExpr={'RezId'}
       dataSource={reservations}
       showColumnLines
       showRowLines
@@ -18,18 +22,9 @@ export default function ReservationsTable({ reservations }: { reservations: Rese
       allowColumnReordering
       columnResizingMode="widget"
       focusedRowEnabled
-      autoNavigateToFocusedRow={false}
-      filterSyncEnabled
-      defaultFilterValue={['RezDurum', '=', 0]}
       onCellPrepared={cellPrepared}
-      keyExpr={'RezId'}
+      onOptionChanged={optionChanged}
     >
-      <Export enabled />
-      <Paging defaultPageSize={50} />
-      <Pager showPageSizeSelector displayMode="compact" />
-      <FilterRow visible />
-      <RemoteOperations paging filtering sorting summary />
-      <ColumnChooser enabled />
       <Column dataField="RezId" dataType="number" caption="Res.ID" width={70} fixed allowResizing={false} />
       <Column dataField="RezDurum" dataType="number" caption="Res.Status" width={76} minWidth={76}></Column>
       <Column dataField="KirmiziVarWeb" dataType="boolean" caption="Blue" width={60} minWidth={60} />
@@ -70,9 +65,6 @@ export default function ReservationsTable({ reservations }: { reservations: Rese
       <Column dataField="KonsolNo" dataType="string" caption="Console No" width={66} minWidth={66} />
       <Column dataField="KonsolPlan" dataType="string" caption="Console Plan" width={66} minWidth={66} />
       <Column dataField="AktarmaGemiAdi" dataType="string" caption="Trn. Vessel" visible={false} showInColumnChooser={false} />
-      <Summary>
-        <TotalItem column="RezId" summaryType="count" displayFormat="{0}" valueFormat="#,##0" />
-      </Summary>
     </DataGrid>
   );
 }
