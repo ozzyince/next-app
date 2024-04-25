@@ -24,7 +24,7 @@ export default async function Page({
         <Search placeholder="Search reservations..." />
         <CreateReservation />
       </div>
-      <Suspense key={query + currentPage} fallback={<ReservationsTableSkeleton />}>
+      <Suspense key={`${query}${currentPage}${sortCol ?? ''}${sortDir ?? ''}`} fallback={<ReservationsTableSkeleton />}>
         <TableWrapper query={query} currentPage={currentPage} sortCol={sortCol} sortDir={sortDir} />
       </Suspense>
     </main>

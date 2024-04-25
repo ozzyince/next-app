@@ -51,7 +51,7 @@ export async function fetchFilteredReservations(query: string, currentPage: numb
       select *
         from ${process.env.DB_PREFIX}dbo._OZGUR_vw_SeaReservation
        where RezDurum = 0 and (KayitKullanici like @query)
-       ${sortCol ? 'order by ' + sortCol + ' ' + sortDir : ''}
+       order by ${sortCol ? sortCol + ' ' + sortDir : 'RezId desc'}
        offset @offset rows fetch next @itemsPerPage rows only;`);
     return result.recordset;
   } catch (error) {
