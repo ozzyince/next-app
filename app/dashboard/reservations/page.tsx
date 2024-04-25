@@ -16,10 +16,8 @@ export default async function Page({
   const currentPage = Number(searchParams?.page) || 1;
 
   return (
-    <div>
-      <div>
-        <h1>Reservations</h1>
-      </div>
+    <main>
+      <h2>Reservations</h2>
       <div>
         <Search placeholder="Search reservations..." />
         <CreateReservation />
@@ -27,6 +25,6 @@ export default async function Page({
       <Suspense key={query + currentPage} fallback={<ReservationsTableSkeleton />}>
         <TableWrapper query={query} currentPage={currentPage} />
       </Suspense>
-    </div>
+    </main>
   );
 }

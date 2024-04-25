@@ -6,8 +6,8 @@ export default async function Page() {
 
   return (
     <main>
-      <h1 className="mb-4 text-xl md:text-2xl">Dashboard</h1>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <h2>Dashboard</h2>
+      <div className="grid gap-6 md:grid-cols-4">
         <Card title="Waiting" value={Waiting} type="waiting" />
         <Card title="Processing" value={Processing} type="processing" />
         <Card title="Canceled" value={Canceled} type="canceled" />
