@@ -12,5 +12,5 @@ export default function ReservationsTableSkeleton() {
     ref.current.innerHTML = html;
   }, []);
 
-  return <div ref={ref} />;
+  return <div ref={ref} className="opacity-35" />;
 }

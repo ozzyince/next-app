@@ -40,6 +40,7 @@ const ITEMS_PER_PAGE = 20;
 export async function fetchFilteredReservations(query: string, currentPage: number, sortCol?: string, sortDir?: 'asc' | 'desc') {
   noStore();
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+  //await new Promise((resolve) => setTimeout(resolve, 5000));
 
   try {
     await sql.connect(sqlConfig);
