@@ -10,10 +10,12 @@ export default async function Page({
   searchParams?: {
     query?: string;
     page?: string;
+    sort?: string;
   };
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
+  const [sortCol, sortDir] = (searchParams?.sort?.split(' ') as [string?, ('asc' | 'desc')?]) ?? [undefined, undefined];
 
   return (
     <main>
@@ -23,7 +25,7 @@ export default async function Page({
         <CreateReservation />
       </div>
       <Suspense key={query + currentPage} fallback={<ReservationsTableSkeleton />}>
-        <TableWrapper query={query} currentPage={currentPage} />
+        <TableWrapper query={query} currentPage={currentPage} sortCol={sortCol} sortDir={sortDir} />
       </Suspense>
     </main>
   );

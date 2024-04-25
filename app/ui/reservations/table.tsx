@@ -1,53 +1,25 @@
 'use client';
 
 import { useCallback } from 'react';
-import { DataGrid } from 'devextreme-react';
-import { Column } from 'devextreme-react/data-grid';
-import { Reservation } from '@/app/lib/definitions';
-import { cellPrepared } from './utils';
-import { OptionChangedEventInfo } from 'devextreme/core/dom_component';
-import dxDataGrid from 'devextreme/ui/data_grid';
-import { columns } from './columns';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import NQDataGrid from '@/app/ui/nq-data-grid';
+import { Reservation } from '@/app/lib/definitions';
+import { columns } from './columns';
 
-export default function ReservationsTable({ reservations }: { reservations: Reservation[] }) {
+export default function ReservationsTable({ reservations, sortCol, sortDir }: { reservations: Reservation[]; sortCol?: string; sortDir?: 'asc' | 'desc' }) {
   const searchParams = useSearchParams();
-  const [sortField, sortDirection] = (searchParams.get('sort')?.split(' ') as [string, 'asc' | 'desc' | undefined]) ?? ['', undefined];
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const optionChanged = useCallback(
-    (e: OptionChangedEventInfo<dxDataGrid<Reservation, any>>) => {
-      if (!e.fullName.endsWith('sortOrder')) return;
-      const idx = +(e.fullName.match(/\d+/) ?? -1);
-      if (idx === -1) return;
+  const sortChanged = useCallback(
+    (sortCol?: string, sortDir?: 'asc' | 'desc') => {
       const params = new URLSearchParams(searchParams);
-      params.set('sort', `${columns[idx].dataField ?? ''} ${e.value}`);
+      if (sortCol) params.set('sort', `${sortCol} ${sortDir}`);
+      else params.delete('sort');
       replace(`${pathname}?${params.toString()}`);
-      console.log('Sort order changed for column', idx, columns[idx].dataField);
     },
-    [searchParams, replace, pathname]
+    [searchParams, pathname, replace]
   );
 
-  return (
-    <DataGrid
-      keyExpr={'RezId'}
-      dataSource={reservations}
-      showColumnLines
-      showRowLines
-      showBorders
-      rowAlternationEnabled
-      allowColumnResizing
-      allowColumnReordering
-      columnResizingMode="widget"
-      focusedRowEnabled
-      columnChooser={{ enabled: true }}
-      onCellPrepared={cellPrepared}
-      onOptionChanged={optionChanged}
-    >
-      {columns.map((column, index) => (
-        <Column key={index} {...column} defaultSortOrder={sortField === column.dataField ? sortDirection : undefined} />
-      ))}
-    </DataGrid>
-  );
+  return <NQDataGrid keyExpr={'RezId'} columns={columns} data={reservations} sortCol={sortCol} sortDir={sortDir} onSortChanged={sortChanged} />;
 }

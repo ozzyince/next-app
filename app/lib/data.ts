@@ -36,8 +36,8 @@ export async function getRezCounts() {
   }
 }
 
-const ITEMS_PER_PAGE = 6;
-export async function fetchFilteredReservations(query: string, currentPage: number) {
+const ITEMS_PER_PAGE = 20;
+export async function fetchFilteredReservations(query: string, currentPage: number, sortCol?: string, sortDir?: 'asc' | 'desc') {
   noStore();
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
@@ -51,7 +51,7 @@ export async function fetchFilteredReservations(query: string, currentPage: numb
       select *
         from ${process.env.DB_PREFIX}dbo._OZGUR_vw_SeaReservation
        where RezDurum = 0 and (KayitKullanici like @query)
-       order by KayitTarih desc
+       ${sortCol ? 'order by ' + sortCol + ' ' + sortDir : ''}
        offset @offset rows fetch next @itemsPerPage rows only;`);
     return result.recordset;
   } catch (error) {
