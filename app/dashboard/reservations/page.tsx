@@ -20,7 +20,7 @@ export default async function Page({
   return (
     <main>
       <h2>Reservations</h2>
-      <div>
+      <div className="flex flex-col md:flex-row">
         <Search placeholder="Search reservations..." />
         <CreateReservation />
       </div>
