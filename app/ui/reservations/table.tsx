@@ -15,7 +15,7 @@ export default function ReservationsTable({ reservations, sortCol, sortDir }: { 
   const sortChanged = useCallback(
     (sortCol?: string, sortDir?: 'asc' | 'desc') => {
       const params = new URLSearchParams(searchParams);
-      if (sortCol) params.set('sort', `${sortCol} ${sortDir}`);
+      if (sortCol && sortDir) params.set('sort', `${sortCol} ${sortDir}`);
       else params.delete('sort');
       localStorage.setItem('ReservationHTML', ref.current?.innerHTML ?? '');
       replace(`${pathname}?${params.toString()}`);
