@@ -17,8 +17,11 @@ export default function ReservationsTable({ reservations, sortCol, sortDir }: { 
       const params = new URLSearchParams(searchParams);
       if (sortCol && sortDir) params.set('sort', `${sortCol} ${sortDir}`);
       else params.delete('sort');
-      localStorage.setItem('ReservationHTML', ref.current?.innerHTML ?? '');
-      replace(`${pathname}?${params.toString()}`);
+      const replaceId = setTimeout(() => {
+        localStorage.setItem('ReservationHTML', ref.current?.innerHTML ?? '');
+        replace(`${pathname}?${params.toString()}`);
+      }, 200);
+      return () => clearTimeout(replaceId);
     },
     [searchParams, pathname, replace]
   );
