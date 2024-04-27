@@ -1,8 +1,16 @@
 import { IColumnProps } from 'devextreme-react/data-grid';
+import { resStatusSource } from '@/app/lib/store';
 
 export const columns: IColumnProps[] = [
   { dataField: 'RezId', dataType: 'number', caption: 'Res.ID', width: 70, fixed: true, allowResizing: false },
-  { dataField: 'RezDurum', dataType: 'number', caption: 'Res.Status', width: 76, minWidth: 76 },
+  {
+    dataField: 'RezDurum',
+    dataType: 'number',
+    caption: 'Res.Status',
+    width: 76,
+    minWidth: 76,
+    lookup: { dataSource: resStatusSource, valueExpr: 'k', displayExpr: 'v' },
+  },
   { dataField: 'KirmiziVarWeb', dataType: 'boolean', caption: 'Blue', width: 60, minWidth: 60 },
   { dataField: 'KalanSure', dataType: 'number', caption: 'Remaining Time', width: 100, minWidth: 100 },
   { dataField: 'Durum', dataType: 'number', caption: 'Load Status', width: 133, minWidth: 133, calculateDisplayValue: 'DurumName' },

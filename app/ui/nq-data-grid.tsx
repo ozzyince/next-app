@@ -2,7 +2,7 @@
 
 import { useCallback } from 'react';
 import { DataGrid } from 'devextreme-react';
-import { Column, IColumnProps } from 'devextreme-react/data-grid';
+import { Column, FilterRow, IColumnProps, Lookup } from 'devextreme-react/data-grid';
 import { OptionChangedEventInfo } from 'devextreme/core/dom_component';
 import dxDataGrid, { CellPreparedEvent } from 'devextreme/ui/data_grid';
 
@@ -23,6 +23,7 @@ export default function NQDataGrid({
 }) {
   const optionChanged = useCallback(
     (e: OptionChangedEventInfo<dxDataGrid<any, any>>) => {
+      console.log(e);
       if (!e.fullName.endsWith('sortOrder')) return;
       const idx = +(e.fullName.match(/\d+/) ?? -1);
       const sortCol = columns[idx]?.dataField;
@@ -65,11 +66,17 @@ export default function NQDataGrid({
       allowColumnReordering
       columnResizingMode="widget"
       focusedRowEnabled
+      syncLookupFilterValues={false}
       onCellPrepared={cellPrepared}
       onOptionChanged={optionChanged}
     >
+      <FilterRow visible />
       {columns.map((column, index) => (
-        <Column key={index} {...column} defaultSortOrder={sortCol === column.dataField ? sortDir : undefined} />
+        <Column key={index} {...column} defaultSortOrder={sortCol === column.dataField ? sortDir : undefined}>
+          {column.lookup ? (
+            <Lookup dataSource={column.lookup.dataSource} displayExpr={column.lookup.displayExpr} valueExpr={column.lookup.displayExpr} />
+          ) : null}
+        </Column>
       ))}
     </DataGrid>
   );
